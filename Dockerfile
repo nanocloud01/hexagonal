@@ -3,13 +3,17 @@ FROM eclipse-temurin:25-jdk-jammy AS build
 
 WORKDIR /app
 
+# Instalar Maven
+RUN apt-get update && apt-get install -y maven
+
 # Copia archivos de proyecto y compila
 COPY pom.xml .
 COPY application ./application
 COPY domain ./domain
 COPY infrastructure ./infrastructure
 
-RUN ./mvnw clean package
+# Compilar (desde el root)
+RUN mvn clean package -DskipTests
 
 # -------- Etapa de producción --------
 FROM eclipse-temurin:25-jre-jammy
